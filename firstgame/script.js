@@ -1,4 +1,5 @@
 let randomWord = ''; // Declare randomWord globally to access it later
+let incorrectGuesses = 0; // Track the number of incorrect guesses
 
 async function getRandomWord() {
     try {
@@ -15,9 +16,11 @@ async function getRandomWord() {
 }
 
 async function startgame() {
+    // Reset incorrect guesses when the game starts
+    incorrectGuesses = 0;
+    
     // Get a random word
     randomWord = await getRandomWord();
-    // Wait for the promise to resolve
     const wordLength = randomWord.length; // Get the length of the word
 
     // Create input fields based on the word length
@@ -39,9 +42,12 @@ async function startgame() {
             if (userInput.toLowerCase() === randomWord[i].toLowerCase()) {
                 alert(`Correct letter: ${userInput}!`); // Alert correct letter
                 input.style.borderColor = 'green'; // Change border color to indicate correct input
-            } else if (userInput) { // Check only if there's an input
-                alert(`Incorrect letter: ${userInput}. Try again!`); // Alert incorrect letter
+            } else if (userInput) {
+                alert(`Incorrect letter: ${userInput}. Try again!`); 
                 input.style.borderColor = 'red'; // Change border color to indicate incorrect input
+                
+                // Hide only one heart
+                hideOneHeart();
             } else {
                 input.style.borderColor = ''; // Reset border color if input is empty
             }
@@ -56,6 +62,15 @@ async function startgame() {
     console.log("Game started");
     // Optionally, you can display the random word in the console for debugging
     console.log(`Random Word: ${randomWord}`);
+}
+
+function hideOneHeart() {
+    const elements = document.getElementsByClassName('h1'); // Get elements with class 'h1'
+
+    if (incorrectGuesses < elements.length) {
+        elements[incorrectGuesses].classList.add('hidden'); // Hide the heart at the current incorrect guess index
+        incorrectGuesses++; // Increment the incorrect guesses counter
+    }
 }
 
 function checkAllInputs() {
